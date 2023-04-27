@@ -48,3 +48,4 @@ Areas of Improvement:
 * I didn't have time to write any nice serializers, so it's just outputs whatever the database gives us.
 * There's no pagination on the list endpoint
 * I haven't tested if the build to js actually works. I only used dev mode with ts-node.
+* Unit tests

@@ -24,8 +24,8 @@
 
 # Eric's Notes
 Data Model:
-* FetchUrlJob - this defines what the job is, there's a unique index on url since that acts as the primary key.
-* FetchUrlExecution - this may not be necessary depending on the use case, but I figured it could be nice to track changes over time. There could be a clean up chore to clean up old data, or we can modify to overwrite the existing one. Keeping them separate makes it flexible.
+* `FetchUrlJob` - this defines what the job is, there's a unique index on url since that acts as the primary key.
+* `FetchUrlExecution` - this may not be necessary depending on the use case, but I figured it could be nice to track changes over time. There could be a clean up chore to clean up old data, or we can modify to overwrite the existing one. Keeping them separate makes it flexible.
 
 Architecture:
 * It's a very simple queue that uses rabbitmq and postgres.
@@ -39,4 +39,3 @@ Areas of Improvement:
 * `FetchUrlExecution` time checking and record creation could live on the consumer instead, to control load on the db a bit better.
 * I didn't have time to write any nice serializers, so it's just outputs whatever the database gives us.
 * There's no pagination on the list endpoint
-* 

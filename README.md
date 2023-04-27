@@ -6,6 +6,14 @@
   * brew install rabbitmq
 * Install postgres
   * brew install pg
+* `npm install`
+* `sequelize-cli db:migrate`
+
+# Dev
+* To run the webserver:
+  * `npm run dev`
+* To run the worker (rabbit consumer):
+  * `npm run devWorker`
 
 # ENDPOINTS
 
@@ -39,3 +47,4 @@ Areas of Improvement:
 * `FetchUrlExecution` time checking and record creation could live on the consumer instead, to control load on the db a bit better.
 * I didn't have time to write any nice serializers, so it's just outputs whatever the database gives us.
 * There's no pagination on the list endpoint
+* I haven't tested if the build to js actually works. I only used dev mode with ts-node.

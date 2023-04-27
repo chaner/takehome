@@ -9,33 +9,34 @@
 
 # ENDPOINTS
 
-POST /api/v1/jobs
+* POST /api/v1/jobs
 ```
 [
   {"url": "https://gingerlabs.com"},
   {"url": "https://apple.com"},
 ]
 ```
-GET /api/v1/jobs
-GET /api/v1/jobs/:jobId
-GET /api/v1/jobs/:jobId/results
-DELETE /api/v1/jobs/:jobId
+* GET /api/v1/jobs - list
+* GET /api/v1/jobs/:jobId - check job details, just the url right now.
+* GET /api/v1/jobs/:jobId/results - check status as well as see results of the execution
+* DELETE /api/v1/jobs/:jobId
 
 
-```Create a service containing a job queue. Each job will consist of fetching data from a URL and storing the results.
+# Eric's Notes
+Data Model:
+* FetchUrlJob - this defines what the job is, there's a unique index on url since that acts as the primary key.
+* FetchUrlExecution - this may not be necessary depending on the use case, but I figured it could be nice to track changes over time. There could be a clean up chore to clean up old data, or we can modify to overwrite the existing one. Keeping them separate makes it flexible.
 
-The service should expose REST or GraphQL API endpoints for:
-- adding a new job (should take the target URL as an argument)
-- checking the status of an existing job
-- retrieving the results of a completed job.
-- deleting a job
+Architecture:
+* It's a very simple queue that uses rabbitmq and postgres.
+1. `FetchUrlJob` `FetchUrlExecution` records are created
+2. if `FetchUrlExecution`'s last createdAt date is less than an hour ago, we don't enqueue. Otherwise we put a message onto the queue
+3. The `FetchWorker` updates the status, takes the message and fetches the webpage, then saves it.
 
-If a URL has been submitted within the last hour, do not fetch the data again.
-
-The API should also support batch requests for new jobs (i.e. you should be able to add jobs for several URLs at once).
-
-We want to respect your time, so please do not spend more than 3 hours on this. If you reach the 3 hour mark and it is incomplete that's fine - please send us what you have.
-
-Regardless of how much you finish, please include a description of what your next steps would be if you were to spend more time on the project and why.
-
-Please send any questions you have to colin@gingerlabs.com, and submit the project to via Dropbox/Google Drive/etc, or github (cgilboy). Thanks!```
+Areas of Improvement:
+* There's no URL validator
+* Code for the rabbit producer and consumer is a bit messy - my first time using it with TS and node. I spent most of my time troubleshooting the local connection. Turns out it doesn't like localhost and needs 127.0.0.1 to resolve the host.
+* `FetchUrlExecution` time checking and record creation could live on the consumer instead, to control load on the db a bit better.
+* I didn't have time to write any nice serializers, so it's just outputs whatever the database gives us.
+* There's no pagination on the list endpoint
+* 

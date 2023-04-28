@@ -1,4 +1,5 @@
 # $\color{white}{URL fetcher}$
+An app that takes in an array of urls, puts them into a queue, fetches them, and stores them into the database.
 
 # SETUP
 

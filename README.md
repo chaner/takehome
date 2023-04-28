@@ -7,6 +7,8 @@
 * Install postgres
   * brew install pg
 * `npm install`
+* `npm install sequelize-cli -g`
+* `sequelize-cli db:create`
 * `sequelize-cli db:migrate`
 
 # Dev
@@ -19,10 +21,12 @@
 
 * POST /api/v1/jobs
 ```
-[
-  {"url": "https://gingerlabs.com"},
-  {"url": "https://apple.com"},
-]
+{
+  "urls": [
+    {"url": "https://gingerlabs.com"},
+    {"url": "https://apple.com"},
+  ]
+}
 ```
 * GET /api/v1/jobs - list
 * GET /api/v1/jobs/:jobId - check job details, just the url right now.
@@ -43,9 +47,10 @@ Architecture:
 
 Areas of Improvement:
 * There's no URL validator
+* There's no caching
 * Code for the rabbit producer and consumer is a bit messy - my first time using it with TS and node. I spent most of my time troubleshooting the local connection. Turns out it doesn't like localhost and needs 127.0.0.1 to resolve the host.
-* `FetchUrlExecution` time checking and record creation could live on the consumer instead, to control load on the db a bit better.
-* I didn't have time to write any nice serializers, so it's just outputs whatever the database gives us.
+* There's no connection pool for rabbitmq
+* I didn't have time to write any serializers, so it's just outputs whatever the database gives us.
 * There's no pagination on the list endpoint
 * I haven't tested if the build to js actually works. I only used dev mode with ts-node.
 * Unit tests

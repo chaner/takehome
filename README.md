@@ -46,11 +46,23 @@ Architecture:
 3. The `FetchWorker` updates the status, takes the message and fetches the webpage, then saves it.
 
 Areas of Improvement:
+* There's no json schema validator for the incoming payload
 * There's no URL validator
 * There's no caching
+* Error handling could be better
+* Clean up the controllers - ideally those should all delegate to the `JobService`
 * Code for the rabbit producer and consumer is a bit messy - my first time using it with TS and node. I spent most of my time troubleshooting the local connection. Turns out it doesn't like localhost and needs 127.0.0.1 to resolve the host.
-* There's no connection pool for rabbitmq
+* There's no connection pool for rabbitmq, it uses the default client
 * I didn't have time to write any serializers, so it's just outputs whatever the database gives us.
 * There's no pagination on the list endpoint
 * I haven't tested if the build to js actually works. I only used dev mode with ts-node.
 * Unit tests
+
+In short, this is just something that works. To productionize it:
+* Datadog, NewRelic, or some other APM
+* More logging
+* Handle more edge cases
+* Better errors
+* Better API, depending how it will be used. Can provide result look up by url instead of ID if we plan to key off of that.
+* Cron job to clean up old historical records if they are not needed, or overwrite existing executions (might run into race conditions this way though)
+* Add caching to reduce DB load
